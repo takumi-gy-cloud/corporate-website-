@@ -1,0 +1,37 @@
+---
+import { client } from "../../lib/microcms";
+
+const data = await client.get({
+  endpoint: "news",
+});
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>お知らせ一覧</title>
+  </head>
+  <body>
+    <h1>お知らせ一覧</h1>
+
+    <p>取得した記事数：{data.totalCount}</p>
+
+    {data.contents.map((article) => (
+      <article>
+        <p>
+          {article.publishedAt
+            ? new Date(article.publishedAt).toLocaleDateString("ja-JP")
+            : ""}
+        </p>
+
+        {/* 2. new Date(article.publishedAt)（日付データへの変換） */}
+        {/* microCMSから届く日付は、最初はただの長い文字列（例："2026-11-24T08:00:00.000Z"）で届きます。
+それをJavaScriptが計算・加工できる「日付データ」に変換しています。 */}
+
+        <h2>
+          <a href={`/news/${article.id}`}>{article.title}</a>
+        </h2>
+      </article>
+    ))}
+  </body>
+</html>

@@ -1,0 +1,54 @@
+
+---
+import { client } from "../../lib/microcms";
+
+// 記事ごとのURLを生成
+export async function getStaticPaths() {
+  const data = await client.getList({
+    endpoint: "news",
+  });
+
+  return data.contents.map((article) => ({
+    params: { id: article.id },
+  }));
+}
+
+// URLから記事IDを取得
+const { id } = Astro.params;
+
+// microCMSから該当する記事を1件取得
+const article = await client.get({
+  endpoint: "news",
+  contentId: id!,
+});
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{article.title} | お知らせ</title>
+  </head>
+
+  <body>
+    <main>
+      <p>NEWS / お知らせ</p>
+
+      <h1>{article.title}</h1>
+
+      <p>
+        {article.publishedAt
+          ? new Date(article.publishedAt).toLocaleDateString("ja-JP")
+          : ""}
+      </p>
+
+      <hr />
+
+      <div set:html={article.content} />
+
+      <p>
+        <a href="/news/">お知らせ一覧へ戻る</a>
+      </p>
+    </main>
+  </body>
+</html>

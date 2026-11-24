@@ -1,0 +1,25 @@
+---
+import { client } from "../lib/microcms";
+
+const data = await client.get({
+  endpoint: "news",
+});
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>microCMS 接続テスト</title>
+  </head>
+  <body>
+    <h1>microCMS 接続テスト</h1>
+
+    <p>取得した記事数：{data.totalCount}</p>
+
+    {data.contents.map((article) => (
+      <article>
+        <h2>{article.title}</h2>
+      </article>
+    ))}
+  </body>
+</html>
